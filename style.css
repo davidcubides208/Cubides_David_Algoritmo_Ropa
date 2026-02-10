@@ -1,0 +1,166 @@
+:root {
+  --bg: #ffffff;
+  --panel: #f5f7fa;
+  --panel2: #ffffff;
+  --border: #d0d7e2;
+  --text: #0b1c2d;
+  --muted: #4b6b88;
+  --blue: #1e6cff;
+  --blue-soft: #e8f0ff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrap {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+h1 {
+  margin-bottom: 6px;
+}
+
+.sub {
+  margin-top: 0;
+  color: var(--muted);
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--blue);
+  color: white;
+}
+
+.ghost {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.danger {
+  background: #c62828;
+  color: white;
+}
+
+.question {
+  background: var(--blue-soft);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.duel {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 900px) {
+  .duel {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pick {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 14px;
+  text-align: left;
+}
+
+.pick:hover {
+  border-color: var(--blue);
+}
+
+.tag {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--blue);
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  line-height: 28px;
+  margin-right: 10px;
+}
+
+.topbox {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.toprow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.toprow:last-child {
+  border-bottom: none;
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.foot {
+  color: var(--muted);
+  padding-bottom: 30px;
+}

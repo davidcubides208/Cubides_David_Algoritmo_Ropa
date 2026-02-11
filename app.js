@@ -233,7 +233,6 @@ window.addEventListener("DOMContentLoaded", () => {
     a.click();
     document.body.removeChild(a);
 
-    URL.revokeObjectURL(url);
   });
 
 });

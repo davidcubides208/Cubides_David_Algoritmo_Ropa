@@ -178,10 +178,29 @@ document.getElementById("btnExport").onclick = () => {
 
 window.addEventListener("DOMContentLoaded", () => {
 
+  fillSelect(segmentSelect, segmentos);
+  fillSelect(contextSelect, contextos);
+
+  // 👇 MOSTRAR MARCAS DESDE EL INICIO
+  newDuel();
+  renderTop();
+
   document.getElementById("btnA").addEventListener("click", () => vote("A"));
   document.getElementById("btnB").addEventListener("click", () => vote("B"));
+
   document.getElementById("btnNewPair").addEventListener("click", newDuel);
   document.getElementById("btnShowTop").addEventListener("click", renderTop);
+
+  // 👇 SI CAMBIA PERFIL O CONTEXTO, ACTUALIZAR MARCAS
+  segmentSelect.addEventListener("change", () => {
+    renderTop();
+    newDuel();
+  });
+
+  contextSelect.addEventListener("change", () => {
+    renderTop();
+    newDuel();
+  });
 
   document.getElementById("btnReset").addEventListener("click", () => {
     if (!confirm("Esto borrará todos los datos guardados. ¿Continuar?")) return;
@@ -191,10 +210,7 @@ window.addEventListener("DOMContentLoaded", () => {
     newDuel();
   });
 
-  // =====================
-  // EXPORTAR A EXCEL (CSV)
-  // =====================
-
+  // EXPORTAR DATOS
   document.getElementById("btnExport").addEventListener("click", () => {
 
     if (!state.votes || state.votes.length === 0) {
@@ -203,23 +219,16 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     const headers = Object.keys(state.votes[0]);
-
     const rows = state.votes.map(v =>
       headers.map(h => `"${String(v[h]).replace(/"/g, '""')}"`).join(",")
     );
 
-    const csvContent = [headers.join(","), ...rows].join("\n");
-
-    const blob = new Blob([csvContent], {
-      type: "text/csv;charset=utf-8;"
-    });
-
-    const url = URL.createObjectURL(blob);
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
     const a = document.createElement("a");
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = "fashionmash_votos.csv";
-
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

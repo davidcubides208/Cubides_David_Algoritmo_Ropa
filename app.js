@@ -47,7 +47,10 @@ function defaultState() {
       marcas.forEach(m => buckets[key][m] = RATING_INICIAL);
     }
   }
-  return { buckets };
+  return {
+    buckets,
+    votes: [] // 👈 AQUÍ guardamos los votos
+  };
 }
 
 let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState();
@@ -115,6 +118,17 @@ function newDuel() {
 function vote(winner) {
   const key = `${segmentSelect.value}__${contextSelect.value}`;
   updateElo(state.buckets[key], currentA, currentB, winner);
+
+  // 📌 REGISTRO DEL VOTO
+  state.votes.push({
+    fecha: new Date().toISOString(),
+    perfil: segmentos[segmentSelect.value],
+    contexto: contextos[contextSelect.value],
+    marcaA: currentA,
+    marcaB: currentB,
+    ganadora: winner === "A" ? currentA : currentB
+  });
+
   saveState();
   renderTop();
   newDuel();
@@ -134,6 +148,34 @@ function renderTop() {
   `).join("");
 }
 
+// =====================
+// 5) EXPORTAR A EXCEL
+// =====================
+
+document.getElementById("btnExport").onclick = () => {
+  if (state.votes.length === 0) {
+    alert("Aún no hay votos registrados.");
+    return;
+  }
+
+  const headers = Object.keys(state.votes[0]);
+  const rows = state.votes.map(v =>
+    headers.map(h => `"${v[h]}"`).join(",")
+  );
+
+  const csv = [headers.join(","), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fashionmash_votos.csv";
+  a.click();
+};
+
+// =====================
+// 6) Eventos
+// =====================
+
 document.getElementById("btnA").onclick = () => vote("A");
 document.getElementById("btnB").onclick = () => vote("B");
 document.getElementById("btnNewPair").onclick = newDuel;
@@ -150,3 +192,4 @@ document.getElementById("btnReset").onclick = () => {
 // init
 newDuel();
 renderTop();
+

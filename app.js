@@ -173,23 +173,60 @@ document.getElementById("btnExport").onclick = () => {
 };
 
 // =====================
-// 6) Eventos
+// 6) Eventos (DOM seguro)
 // =====================
 
-document.getElementById("btnA").onclick = () => vote("A");
-document.getElementById("btnB").onclick = () => vote("B");
-document.getElementById("btnNewPair").onclick = newDuel;
-document.getElementById("btnShowTop").onclick = renderTop;
+window.addEventListener("DOMContentLoaded", () => {
 
-document.getElementById("btnReset").onclick = () => {
-  if (!confirm("Esto borrará todos los datos guardados. ¿Continuar?")) return;
-  state = defaultState();
-  saveState();
-  renderTop();
-  newDuel();
-};
+  document.getElementById("btnA").addEventListener("click", () => vote("A"));
+  document.getElementById("btnB").addEventListener("click", () => vote("B"));
+  document.getElementById("btnNewPair").addEventListener("click", newDuel);
+  document.getElementById("btnShowTop").addEventListener("click", renderTop);
 
-// init
-newDuel();
-renderTop();
+  document.getElementById("btnReset").addEventListener("click", () => {
+    if (!confirm("Esto borrará todos los datos guardados. ¿Continuar?")) return;
+    state = defaultState();
+    saveState();
+    renderTop();
+    newDuel();
+  });
+
+  // =====================
+  // EXPORTAR A EXCEL (CSV)
+  // =====================
+
+  document.getElementById("btnExport").addEventListener("click", () => {
+
+    if (!state.votes || state.votes.length === 0) {
+      alert("Aún no hay votos registrados.");
+      return;
+    }
+
+    const headers = Object.keys(state.votes[0]);
+
+    const rows = state.votes.map(v =>
+      headers.map(h => `"${String(v[h]).replace(/"/g, '""')}"`).join(",")
+    );
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "fashionmash_votos.csv";
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+  });
+
+});
+
 
